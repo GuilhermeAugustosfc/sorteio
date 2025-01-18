@@ -1,0 +1,33 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+:root {
+  --incrivel-bg: #0f121a;
+  --incrivel-border: #d1d1d1;
+  --incrivel-bgColor: #fff;
+  --incrivel-bgLink: #fff;
+  --incrivel-bgLinkHover: var(--incrivel-primaria);
+  --incrivel-rgba: 255, 255, 255;
+  --incrivel-rgbaInvert: #fff;
+  --incrivel-formBg: #fff;
+  --incrivel-formBgHover: #fff;
+  --incrivel-formBgHoverColor: #fff;
+  --incrivel-formBorder: #c9c9c9;
+  --incrivel-formColor: #fff;
+  --incrivel-cardBg: #0f121a;
+  --incrivel-cardColor: #fff;
+  --incrivel-cardLink: #fff;
+  --incrivel-modalBg: #fff;
+  --incrivel-modalBorder: #eee;
+  --incrivel-modalColor: #333;
+  --incrivel-primaria: #000;
+  --incrivel-primariaColor: #cfcfcf;
+  --incrivel-primariaLink: #fff;
+  --incrivel-primariaLinkHover: #fff;
+  --incrivel-primariaDarken: #343a40;
+  --incrivel-primariaDarkenColor: #323232;
+  --incrivel-primariaDarkenLink: #fff;
+  --incrivel-primariaDarkenLinkHover: #fff;
+}
+
+/* Seus estilos existentes aqui */

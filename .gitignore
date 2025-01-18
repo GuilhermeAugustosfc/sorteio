@@ -1,0 +1,5 @@
+# Start Generation Here
+.env.local
+node_modules/
+.next/
+.vscode/
