@@ -48,10 +48,17 @@ export default async function handler(
     // Se o pagamento foi aprovado
     if (payment.status === "approved") {
       console.log("✅ Pagamento aprovado, buscando pedido...");
-      // Busca o pedido pelo external_reference (ref)
+      // Busca o pedido pelo external_reference (order_id)
       const { data: order, error: orderError } = await supabase
         .from("orders")
-        .select("*")
+        .select(
+          `
+          *,
+          order_items!inner (
+            product_id
+          )
+        `
+        )
         .eq("id", payment.external_reference)
         .single();
 
@@ -73,60 +80,73 @@ export default async function handler(
         .from("orders")
         .update({
           payment_status: "paid",
+          status: "paid",
           paid_at: new Date().toISOString(),
         })
         .eq("id", order.id);
 
       // Buscar todos os números já utilizados em pedidos pagos
-      const { data: existingNumbers, error: numbersError } = await supabase
-        .from("order_items")
-        .select(
+      try {
+        const { data: existingNumbers, error: numbersError } = await supabase
+          .from("order_items")
+          .select(
+            `
+            numbers,
+            product_id,
+            orders!inner(payment_status)
           `
-          numbers,
-          orders!inner(payment_status)
-        `
-        )
-        .eq("orders.payment_status", "paid");
+          )
+          .eq("orders.payment_status", "paid");
 
-      if (numbersError) {
-        console.log("❌ Erro ao buscar números existentes:", numbersError);
-        throw numbersError;
-      }
-
-      // Criar conjunto de números existentes para busca rápida
-      const usedNumbers = new Set(
-        existingNumbers?.flatMap(
-          (item: { numbers: string[] }) => item.numbers || []
-        )
-      );
-
-      // Gerar novos números únicos
-      const numbers: string[] = [];
-      while (numbers.length < order.quantity) {
-        const newNumber = Math.floor(
-          100000 + Math.random() * 900000
-        ).toString();
-        if (!usedNumbers.has(newNumber)) {
-          numbers.push(newNumber);
-          usedNumbers.add(newNumber); // Adiciona ao conjunto para evitar duplicatas na mesma geração
+        if (numbersError) {
+          console.log("❌ Erro ao buscar números existentes:", numbersError);
+          throw numbersError;
         }
-      }
 
-      const { error: updateItemsError } = await supabase
-        .from("order_items")
-        .update({
-          numbers: numbers,
-        })
-        .eq("order_id", order.id);
+        // Criar conjunto de números existentes para busca rápida
+        const usedNumbers = new Set(
+          existingNumbers?.flatMap(
+            (item: { numbers: string[] }) => item.numbers || []
+          ) || []
+        );
 
-      if (updateError) {
-        console.log("❌ Erro ao atualizar pedido:", updateError);
-        throw updateError;
-      }
+        // Gerar novos números únicos
+        const numbers: string[] = [];
+        let attempts = 0;
+        const maxAttempts = order.quantity * 2; // Limite de tentativas para evitar loop infinito
 
-      if (updateItemsError) {
-        console.log("❌ Erro ao atualizar itens do pedido:", updateItemsError);
-        throw updateItemsError;
+        while (numbers.length < order.quantity && attempts < maxAttempts) {
+          const newNumber = Math.floor(
+            100000 + Math.random() * 900000
+          ).toString();
+          if (!usedNumbers.has(newNumber)) {
+            numbers.push(newNumber);
+            usedNumbers.add(newNumber);
+          }
+          attempts++;
+        }
+
+        if (numbers.length < order.quantity) {
+          throw new Error("Não foi possível gerar números únicos suficientes");
+        }
+
+        const { error: updateItemsError } = await supabase
+          .from("order_items")
+          .update({
+            numbers: numbers,
+          })
+          .eq("order_id", order.id);
+
+        if (updateItemsError) {
+          console.log(
+            "❌ Erro ao atualizar itens do pedido:",
+            updateItemsError
+          );
+          throw updateItemsError;
+        }
+      } catch (error) {
+        console.error("❌ Erro ao processar números do pedido:", error);
+        throw error;
       }
 
       console.log("🎲 Atualizando cotas do sorteio...");
@@ -135,7 +155,7 @@ export default async function handler(
         "update_raffle_quotas",
         {
           p_product_id: order.product_id,
-          p_quantity: order.quantity,
+          p_quantity: parseInt(order.quantity),
         }
       );
 

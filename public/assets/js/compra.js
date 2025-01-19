@@ -79,6 +79,17 @@ $(document).ready(function () {
     // Atualiza a área de números
     $("[data-nosnippet='true']").html(numerosHtml);
 
+    // Atualiza o status de compra
+    $(".compra-status").html(`
+      <div class="app-alerta-msg mb-2">
+          <i class="app-alerta-msg--icone bi bi-check-circle text-success"></i>
+          <div class="app-alerta-msg--txt">
+              <h3 class="app-alerta-msg--titulo">Pagamento Aprovado!</h3>
+              <p>Seus números foram gerados com sucesso</p>
+          </div>
+      </div>
+    `);
+
     // Limpa os intervalos e localStorage
     clearInterval(statusInterval);
     clearInterval(tempoInterval);

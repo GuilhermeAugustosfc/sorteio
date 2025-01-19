@@ -216,7 +216,7 @@ function copyPix() {
 $(document).ready(function () {
   var cotas_array =
     "000000:500:premiada,111111:500:premiada,222222:500:premiada,333333:500:premiada,444444:500:premiada,555555:500:premiada,666666:500:premiada,777777:500:premiada,888888:500:premiada,999999:500:premiada,101010:500:premiada,202020:500:premiada,303030:500:premiada,404040:500:premiada,505050:500:premiada,606060:500:premiada,707070:500:premiada,808080:500:premiada,909090:500:premiada,202501:500:premiada";
-  var product_id = parseInt("6990bd5a-a943-414e-bd8d-104047da60c8");
+  var product_id = "6990bd5a-a943-414e-bd8d-104047da60c8";
   var cotas_premiadas =
     "000000,111111,222222,333333,444444,555555,666666,777777,888888,999999,101010,202020,303030,404040,505050,606060,707070,808080,909090,202501";
   var $quantidade_auto_cota = "0";
@@ -355,7 +355,7 @@ function calculatePrice(qty) {
   let available = parseInt("959736");
   let total = price * qty;
   var max = parseInt("10000");
-  var min = parseInt("25");
+  var min = parseInt("1");
 
   if (qty > available) {
     //calculatePrice(available);

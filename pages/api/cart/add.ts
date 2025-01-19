@@ -90,8 +90,8 @@ export default async function handler(
     const { error: updateError } = await supabase
       .from("raffles")
       .update({
-        cotas_reservadas: raffle.cotas_reservadas + qty,
-        cotas_disponiveis: raffle.cotas_disponiveis - qty,
+        cotas_reservadas: parseInt(raffle.cotas_reservadas) + parseInt(qty),
+        cotas_disponiveis: parseInt(raffle.cotas_disponiveis) - parseInt(qty),
       })
       .eq("product_id", product_id);
 
@@ -102,7 +102,7 @@ export default async function handler(
 
     // Criar pedido diretamente
     const orderRef = uuidv4().split("-")[0];
-    const total = qty * raffle.price;
+    const total = parseInt(qty) * raffle.price;
 
     const { data: order, error: orderError } = await supabase
       .from("orders")
@@ -112,7 +112,7 @@ export default async function handler(
         status: "pending",
         payment_status: "pending",
         total: total,
-        quantity: qty,
+        quantity: parseInt(qty),
       })
       .select()
       .single();
@@ -125,7 +125,7 @@ export default async function handler(
     const { error: itemsError } = await supabase.from("order_items").insert({
       order_id: order.id,
       product_id: product_id,
-      quantity: qty,
+      quantity: parseInt(qty),
       price: raffle.price,
     });
 

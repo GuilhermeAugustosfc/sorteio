@@ -92,7 +92,7 @@ export default async function handler(
         (total: number, item: OrderItem) => total + item.quantity,
         0
       )} cotas`,
-      external_reference: order.ref,
+      external_reference: order_id,
     });
     console.log("Pagamento criado com sucesso:", payment);
 
