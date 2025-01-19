@@ -1,5 +1,5 @@
 // const BASE_API_URL = "http://localhost:3000";
-const BASE_API_URL = "https://sorteio-ruddy.vercel.app/";
+const BASE_API_URL = "https://sorteio-ruddy.vercel.app";
 
 function getAuthHeaders() {
   const token = localStorage.getItem("authToken");
