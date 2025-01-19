@@ -1,5 +1,6 @@
 // Configuração da API
-const BASE_API_URL = "http://localhost:3000"; // Altere para a URL do seu servidor Next.js
+// const BASE_API_URL = "http://localhost:3000"; // Altere para a URL do seu servidor Next.js
+const BASE_API_URL = "https://sorteio-ruddy.vercel.app/"; // Altere para a URL do seu servidor Next.js
 
 function fMasc(objeto, mascara) {
   obj = objeto;
