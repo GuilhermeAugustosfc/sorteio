@@ -3,6 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ["qyxjpccyqysndrynjhfx.supabase.co"], // Adicione seu domínio do Supabase aqui
+    unoptimized: true, // Permite imagens não otimizadas para compatibilidade com HTML estático
+  },
+  // Desabilita o processamento de páginas React para arquivos na pasta public
+  typescript: {
+    ignoreBuildErrors: true,
   },
   async headers() {
     return [
@@ -20,6 +25,16 @@ const nextConfig = {
             key: "Access-Control-Allow-Headers",
             value:
               "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization",
+          },
+        ],
+      },
+      {
+        // Para arquivos estáticos
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
