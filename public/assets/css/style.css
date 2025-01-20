@@ -12476,6 +12476,7 @@ fieldset:disabled .btn {
 
 .app-header .app-brand {
   max-height: 35px;
+  scale: 4.1;
 }
 
 .menu-mobile {
@@ -13499,6 +13500,7 @@ body a:hover {
 .header-app-header .header-app-brand {
   max-height: 55px;
   max-width: 185px;
+  scale: 4.1;
 }
 
 .ganhadorItem_ganhadorContainer__1Sbxm {
